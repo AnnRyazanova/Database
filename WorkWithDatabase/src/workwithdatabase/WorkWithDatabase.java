@@ -1,5 +1,8 @@
 package workwithdatabase;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.*;
 import javafx.scene.Scene;
@@ -8,6 +11,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.event.*;
+import javafx.fxml.FXMLLoader;
+import javafx.stage.Modality;
 import javax.swing.*;
 
 public class WorkWithDatabase extends Application {
@@ -44,12 +49,81 @@ public class WorkWithDatabase extends Application {
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(delivery.isSelected())
-                    System.out.println("TO DO 1"); // TO DO
-                else if (transfer.isSelected())
-                    System.out.println("TO DO 2"); // TO DO
-                else if (supply.isSelected())
-                    System.out.println("TO DO 3"); // TO DO
+                if(delivery.isSelected()) {
+                    Stage dialogStage = new Stage();
+                    dialogStage.setTitle("Transfer");
+                    dialogStage.initModality(Modality.WINDOW_MODAL);
+                    dialogStage.initOwner(primaryStage);
+                    GridPane grid = new GridPane();
+                    grid.setHgap(10);
+                    grid.setVgap(10);
+                    grid.setPadding(new Insets(25, 25, 25, 25));
+                    Scene scene = new Scene(grid, 400, 200);
+                    dialogStage.setScene(scene); 
+                    
+                    Label warehouse = new Label("Выберите склад:");
+                    grid.add(warehouse, 0, 1);
+ 
+                    Label client = new Label("Выберите клиента:");
+                    grid.add(client, 0, 2);
+                    
+                    Button btn = new Button("Сделать заказ");
+                    HBox hbBtn = new HBox(10);
+                    hbBtn.getChildren().add(btn);
+                    grid.add(hbBtn, 0, 4);
+                    
+                    dialogStage.showAndWait(); 
+                }
+                else if (transfer.isSelected()) {
+                    Stage dialogStage = new Stage();
+                    dialogStage.setTitle("Transfer");
+                    dialogStage.initModality(Modality.WINDOW_MODAL);
+                    dialogStage.initOwner(primaryStage);
+                    GridPane grid = new GridPane();
+                    grid.setHgap(10);
+                    grid.setVgap(10);
+                    grid.setPadding(new Insets(25, 25, 25, 25));
+                    Scene scene = new Scene(grid, 400, 200);
+                    dialogStage.setScene(scene); 
+                    
+                    Label from = new Label("Откуда выполнить доставку:");
+                    grid.add(from, 0, 1);
+ 
+                    Label to = new Label("Куда выполнить доставку:");
+                    grid.add(to, 0, 2);
+                    
+                    Button btn = new Button("Сделать заказ");
+                    HBox hbBtn = new HBox(10);
+                    hbBtn.getChildren().add(btn);
+                    grid.add(hbBtn, 0, 4);
+                    
+                    dialogStage.showAndWait(); 
+                }
+                else if (supply.isSelected()) {
+                    Stage dialogStage = new Stage();
+                    dialogStage.setTitle("Supply");
+                    dialogStage.initModality(Modality.WINDOW_MODAL);
+                    dialogStage.initOwner(primaryStage);
+                    GridPane grid = new GridPane();
+                    grid.setHgap(10);
+                    grid.setVgap(10);
+                    grid.setPadding(new Insets(25, 25, 25, 25));
+                    Scene scene = new Scene(grid, 400, 200);
+                    dialogStage.setScene(scene); 
+                    
+                    Label agent = new Label("Выберите агента:");
+                    grid.add(agent, 0, 1);
+ 
+                    Label warehouse = new Label("Выберите склад:");
+                    grid.add(warehouse, 0, 2);
+                    
+                    Button btn = new Button("Сделать заказ");
+                    HBox hbBtn = new HBox(10);
+                    hbBtn.getChildren().add(btn);
+                    grid.add(hbBtn, 0, 4);
+                    
+                    dialogStage.showAndWait(); 
+                }
                 else 
                     JOptionPane.showMessageDialog(null, "Выберите тип доставки!", "Не выбран тип доставки", JOptionPane.ERROR_MESSAGE);
             }
