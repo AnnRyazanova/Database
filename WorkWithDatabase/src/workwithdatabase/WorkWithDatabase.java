@@ -80,7 +80,7 @@ public class WorkWithDatabase extends Application {
                     
                     ObservableList<String> options = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouseBox = new ComboBox(options);
-                    //warehouseBox.setValue("Option 1");
+                    warehouseBox.setValue(warehouseBox.getItems().get(0));
                     
                     grid.add(warehouseBox, 1, 1);                    
  
@@ -92,7 +92,7 @@ public class WorkWithDatabase extends Application {
                     
                     ObservableList<String> options2 = FXCollections.observableArrayList(clientList);
                     final ComboBox clientBox = new ComboBox(options2);
-                    //clientBox.setValue("Option 1");
+                    clientBox.setValue(clientBox.getItems().get(0));
                     
                     grid.add(clientBox, 1, 2);  
                     
@@ -129,7 +129,7 @@ public class WorkWithDatabase extends Application {
                     
                     ObservableList<String> options = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouse1Box = new ComboBox(options);
-                    //warehouse1Box.setValue("Option 1");
+                    warehouse1Box.setValue(warehouse1Box.getItems().get(0));
                     
                     grid.add(warehouse1Box, 1, 1);    
  
@@ -137,7 +137,7 @@ public class WorkWithDatabase extends Application {
                     grid.add(to, 0, 2);
                     
                     final ComboBox warehouse2Box = new ComboBox(options);
-                    //warehouse2Box.setValue("Option 1");
+                    warehouse2Box.setValue(warehouse2Box.getItems().get(0));
                     
                     grid.add(warehouse2Box, 1, 2);    
                     
@@ -174,7 +174,7 @@ public class WorkWithDatabase extends Application {
                     
                     ObservableList<String> options = FXCollections.observableArrayList(agentList);
                     final ComboBox agentBox = new ComboBox(options);
-                   //agentBox.setValue("Option 1");
+                    agentBox.setValue(agentBox.getItems().get(0));
                     
                     grid.add(agentBox, 1, 1);    
  
@@ -186,7 +186,7 @@ public class WorkWithDatabase extends Application {
                     
                     ObservableList<String> options2 = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouseBox = new ComboBox(options2);
-                    //warehouseBox.setValue("Option 1");
+                    warehouseBox.setValue(warehouseBox.getItems().get(0));
                     
                     grid.add(warehouseBox, 1, 2);    
                     
