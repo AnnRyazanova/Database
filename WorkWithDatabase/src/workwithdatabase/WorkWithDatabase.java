@@ -6,6 +6,9 @@ import java.awt.GridLayout;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -72,50 +75,24 @@ public class WorkWithDatabase extends Application {
                     Label warehouse = new Label("Выберите склад:");
                     grid.add(warehouse, 0, 1);
                                      
-                    database.selectAll("WAREHOUSE");
-                    /*JTable table = new JTable(data, columnNames);
-                    JScrollPane scrollPane = new JScrollPane(table);
-                    ScrollPane sp = new ScrollPane();*/
-                    /*
-                    TableView table = new TableView();
-                    TableColumn firstNameCol = new TableColumn("ID");
-                    TableColumn lastNameCol = new TableColumn("City");
-                    TableColumn emailCol = new TableColumn("Name");
-        
-                    table.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+                    String infoWarehouse[] = {"ID", "CITY", "NAME"};
+                    ArrayList<String> warehouseList = database.selectAll("WAREHOUSE", infoWarehouse, "NAME");
                     
-                    ScrollPane sp = new ScrollPane();
-                    sp.setContent(table);
- 
-                    final VBox vbox = new VBox();
-                    vbox.setSpacing(5);
-                    vbox.setPadding(new Insets(10, 0, 0, 10));
-                    vbox.getChildren().add(sp);
- 
-                    grid.getChildren().addAll(vbox);*/
-                    
-                    ObservableList<String> options = 
-                    FXCollections.observableArrayList(
-                    "Option 1",
-                    "Option 2",
-                    "Option 3"
-                     );
+                    ObservableList<String> options = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouseBox = new ComboBox(options);
-                    warehouseBox.setValue("Option 1");
+                    //warehouseBox.setValue("Option 1");
                     
                     grid.add(warehouseBox, 1, 1);                    
  
                     Label client = new Label("Выберите клиента:");
                     grid.add(client, 0, 2);
                     
-                    ObservableList<String> options2 = 
-                    FXCollections.observableArrayList(
-                    "Option 1",
-                    "Option 2",
-                    "Option 3"
-                     );
+                    String infoClient[] = {"ID", "NAME", "CITY", "ADDRESS", "PHONE"};
+                    ArrayList<String> clientList = database.selectAll("CLIENT", infoClient, "NAME");
+                    
+                    ObservableList<String> options2 = FXCollections.observableArrayList(clientList);
                     final ComboBox clientBox = new ComboBox(options2);
-                    clientBox.setValue("Option 1");
+                    //clientBox.setValue("Option 1");
                     
                     grid.add(clientBox, 1, 2);  
                     
@@ -147,14 +124,12 @@ public class WorkWithDatabase extends Application {
                     Label from = new Label("Откуда выполнить доставку:");
                     grid.add(from, 0, 1);
                     
-                    ObservableList<String> options = 
-                    FXCollections.observableArrayList(
-                    "Option 1",
-                    "Option 2",
-                    "Option 3"
-                     );
+                    String infoWarehouse[] = {"ID", "CITY", "NAME"};
+                    ArrayList<String> warehouseList = database.selectAll("WAREHOUSE", infoWarehouse, "NAME");
+                    
+                    ObservableList<String> options = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouse1Box = new ComboBox(options);
-                    warehouse1Box.setValue("Option 1");
+                    //warehouse1Box.setValue("Option 1");
                     
                     grid.add(warehouse1Box, 1, 1);    
  
@@ -162,7 +137,7 @@ public class WorkWithDatabase extends Application {
                     grid.add(to, 0, 2);
                     
                     final ComboBox warehouse2Box = new ComboBox(options);
-                    warehouse2Box.setValue("Option 1");
+                    //warehouse2Box.setValue("Option 1");
                     
                     grid.add(warehouse2Box, 1, 2);    
                     
@@ -194,28 +169,24 @@ public class WorkWithDatabase extends Application {
                     Label agent = new Label("Выберите агента:");
                     grid.add(agent, 0, 1);
                     
-                    ObservableList<String> options = 
-                    FXCollections.observableArrayList(
-                    "Option 1",
-                    "Option 2",
-                    "Option 3"
-                     );
+                    String infoAgent[] = {"ID", "NAME", "PHONE", "CITY"};
+                    ArrayList<String> agentList = database.selectAll("AGENT", infoAgent, "NAME");
+                    
+                    ObservableList<String> options = FXCollections.observableArrayList(agentList);
                     final ComboBox agentBox = new ComboBox(options);
-                    agentBox.setValue("Option 1");
+                   //agentBox.setValue("Option 1");
                     
                     grid.add(agentBox, 1, 1);    
  
                     Label warehouse = new Label("Выберите склад:");
                     grid.add(warehouse, 0, 2);
                     
-                    ObservableList<String> options2 = 
-                    FXCollections.observableArrayList(
-                    "Option 1",
-                    "Option 2",
-                    "Option 3"
-                     );
+                    String infoWarehouse[] = {"ID", "CITY", "NAME"};
+                    ArrayList<String> warehouseList = database.selectAll("WAREHOUSE", infoWarehouse, "NAME");
+                    
+                    ObservableList<String> options2 = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouseBox = new ComboBox(options2);
-                    warehouseBox.setValue("Option 1");
+                    //warehouseBox.setValue("Option 1");
                     
                     grid.add(warehouseBox, 1, 2);    
                     
@@ -297,44 +268,13 @@ public class WorkWithDatabase extends Application {
     
     public static void main(String[] args) {
         launch(args);
-        /*
-        WorkWithDatabase database = new WorkWithDatabase();
-        database.connect();
-        
-        JFrame form1 = new JFrame("ЗАКАЗЫ");
-        form1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        form1.setSize(750, 350);
-        form1.setLocationRelativeTo(null);
-
-        String[] columnNames = {
-                "ID",
-                "City",
-                "Name"
-        };
-        
-        database.selectAll("WAREHOUSE");
-        JTable table = new JTable(data, columnNames);
-        JScrollPane scrollPane = new JScrollPane(table);
-        JButton addDriverCar = new JButton("Добавить водителя и машину");
-        
-        form1.getContentPane().add(scrollPane);
-        form1.setPreferredSize(new Dimension(750, 350));
-
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new GridLayout(1, 1, 5, 0));
-        form1.add(buttonsPanel, BorderLayout.SOUTH);
-        buttonsPanel.add(addDriverCar);
-
-        form1.pack();
-        form1.setLocationRelativeTo(null);
-        form1.setVisible(true);
-        */
     }
     
     static public String[][] data;
     
-    public void selectAll(String from) {
+    public ArrayList<String> selectAll(String from, String[] args, String field) {
         ResultSet rs = null;
+        ArrayList<String> listNames = new ArrayList();
 
         try {
             Class.forName(driverName);
@@ -348,11 +288,13 @@ public class WorkWithDatabase extends Application {
             ResultSetMetaData rsM = rs.getMetaData();
 
             int i = 0;
-            data = new String[10][3];
+            data = new String[50][args.length];
             while (rs.next()) {
-                data[i][0] = rs.getString("ID");
-                data[i][1] = rs.getString("CITY");
-                data[i][2] = rs.getString("NAME");
+                for (int k = 0; k < args.length; k++){ 
+                    data[i][k] = rs.getString(args[k]);
+                    if (args[k].equals(field))
+                        listNames.add(data[i][k]);
+                }
                 i++;
             }
 
@@ -376,6 +318,7 @@ public class WorkWithDatabase extends Application {
             } catch (SQLException e) {
             }
         }
+        return listNames;
     }
     
 }
