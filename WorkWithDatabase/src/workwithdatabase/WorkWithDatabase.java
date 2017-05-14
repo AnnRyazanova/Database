@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,22 +22,40 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.event.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
-import javax.swing.*;
 
 public class WorkWithDatabase extends Application {
+    private Connection connection;
     
     @Override
     public void start(Stage primaryStage) {
-        WorkWithDatabase database = new WorkWithDatabase();
-        database.connect();
+/*        try {
+            Parent parent = FXMLLoader.load(getClass().getResource("window.fxml"));
+            primaryStage.setScene(new Scene(parent));
+            primaryStage.show();
+        } catch (Exception e) {
+            throw new Error(e);
+        }*/
         
-        primaryStage.setTitle("Work with database");
+        
+        try {
+            connect();
+        } catch (Exception e) {
+            Alert alert = new Alert(AlertType.ERROR, 
+                    "Не могу подключиться к базе данных.");
+            alert.showAndWait();
+            System.exit(1);
+        }
+        
+        primaryStage.setTitle("Работа с базой данных");
         
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.setHgap(5);
+        grid.setVgap(5);
+        grid.setPadding(new Insets(5, 5, 5, 5));
         
         Text scenetitle = new Text("Выберите тип доставки : ");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -76,7 +96,7 @@ public class WorkWithDatabase extends Application {
                     grid.add(warehouse, 0, 1);
                                      
                     String infoWarehouse[] = {"ID", "CITY", "NAME"};
-                    ArrayList<String> warehouseList = database.selectAll("WAREHOUSE", infoWarehouse, "NAME");
+                    ArrayList<String> warehouseList = selectAll("WAREHOUSE", infoWarehouse, "NAME");
                     
                     ObservableList<String> options = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouseBox = new ComboBox(options);
@@ -88,7 +108,7 @@ public class WorkWithDatabase extends Application {
                     grid.add(client, 0, 2);
                     
                     String infoClient[] = {"ID", "NAME", "CITY", "ADDRESS", "PHONE"};
-                    ArrayList<String> clientList = database.selectAll("CLIENT", infoClient, "NAME");
+                    ArrayList<String> clientList = selectAll("CLIENT", infoClient, "NAME");
                     
                     ObservableList<String> options2 = FXCollections.observableArrayList(clientList);
                     final ComboBox clientBox = new ComboBox(options2);
@@ -125,7 +145,7 @@ public class WorkWithDatabase extends Application {
                     grid.add(from, 0, 1);
                     
                     String infoWarehouse[] = {"ID", "CITY", "NAME"};
-                    ArrayList<String> warehouseList = database.selectAll("WAREHOUSE", infoWarehouse, "NAME");
+                    ArrayList<String> warehouseList = selectAll("WAREHOUSE", infoWarehouse, "NAME");
                     
                     ObservableList<String> options = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouse1Box = new ComboBox(options);
@@ -170,7 +190,7 @@ public class WorkWithDatabase extends Application {
                     grid.add(agent, 0, 1);
                     
                     String infoAgent[] = {"ID", "NAME", "PHONE", "CITY"};
-                    ArrayList<String> agentList = database.selectAll("AGENT", infoAgent, "NAME");
+                    ArrayList<String> agentList = selectAll("AGENT", infoAgent, "NAME");
                     
                     ObservableList<String> options = FXCollections.observableArrayList(agentList);
                     final ComboBox agentBox = new ComboBox(options);
@@ -182,7 +202,7 @@ public class WorkWithDatabase extends Application {
                     grid.add(warehouse, 0, 2);
                     
                     String infoWarehouse[] = {"ID", "CITY", "NAME"};
-                    ArrayList<String> warehouseList = database.selectAll("WAREHOUSE", infoWarehouse, "NAME");
+                    ArrayList<String> warehouseList = selectAll("WAREHOUSE", infoWarehouse, "NAME");
                     
                     ObservableList<String> options2 = FXCollections.observableArrayList(warehouseList);
                     final ComboBox warehouseBox = new ComboBox(options2);
@@ -202,9 +222,9 @@ public class WorkWithDatabase extends Application {
                     }});
                     
                     dialogStage.showAndWait(); 
+                } else {
+                    new Alert(AlertType.ERROR, "Не выбран тип доставки").showAndWait();
                 }
-                else 
-                    JOptionPane.showMessageDialog(null, "Выберите тип доставки!", "Не выбран тип доставки", JOptionPane.ERROR_MESSAGE);
             }
         });
         
@@ -214,109 +234,40 @@ public class WorkWithDatabase extends Application {
         primaryStage.show();
     }
     
-    private Properties pr;
-    private String databaseURL;
-    private String user;
-    private String password;
-    private String driverName;
-    private Driver d;
-    private Connection c;
-    private Statement s;
-    private ResultSet rs;
-    
-    public boolean connect() {
-        pr = new Properties();
-        try {
-            FileInputStream inp = new FileInputStream("database.prop");
-            pr.load(inp);
-            inp.close();
-        } catch (IOException e) {
-            return false;
+    public void connect() throws Exception {
+        Properties properties = new Properties();
+        try (FileInputStream inputStream = new FileInputStream("database.prop")) {
+            properties.load(inputStream);
         }
-
-        databaseURL = pr.getProperty("dbURL");
-        user = pr.getProperty("user");
-        password = pr.getProperty("password");
-        driverName = pr.getProperty("driver");
-
-        try {
-            Class.forName(driverName);
-            c = DriverManager.getConnection(databaseURL, user, password);
-
-        } catch (ClassNotFoundException e) {
-            System.out.println("Fireberd JDBC driver not found");
-        } catch (SQLException e) {
-            System.out.println("SQLException" + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Exception" + e.getMessage());
-        } finally {
-            try {
-                if (rs != null) rs.close();
-            } catch (SQLException e) {
-            }
-            try {
-                if (s != null) s.close();
-            } catch (SQLException e) {
-            }
-            try {
-                if (c != null) c.close();
-            } catch (SQLException e) {
-            }
-        }
-        return true;
+        String databaseURL = properties.getProperty("dbURL");
+        String user = properties.getProperty("user");
+        String password = properties.getProperty("password");
+        String driverName = properties.getProperty("driver");
+        Class.forName(driverName);
+        connection = DriverManager.getConnection(databaseURL, user, password);
     }
     
     public static void main(String[] args) {
         launch(args);
     }
     
-    static public String[][] data;
-    
     public ArrayList<String> selectAll(String from, String[] args, String field) {
-        ResultSet rs = null;
         ArrayList<String> listNames = new ArrayList();
 
-        try {
-            Class.forName(driverName);
-            c = DriverManager.getConnection(databaseURL, user, password);
-            DatabaseMetaData dbM = c.getMetaData();
-            rs = dbM.getTables(null, null, "%", new String[]{"TABLE", "VIEW"});
-            while (rs.next()) {
-            }
-            s = c.createStatement();
-            rs = s.executeQuery("select * from " + from);
-            ResultSetMetaData rsM = rs.getMetaData();
-
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("select * from " + from)) {
             int i = 0;
-            data = new String[50][args.length];
-            while (rs.next()) {
+            String[][] data = new String[50][args.length];
+            while (resultSet.next()) {
                 for (int k = 0; k < args.length; k++){ 
-                    data[i][k] = rs.getString(args[k]);
+                    data[i][k] = resultSet.getString(args[k]);
                     if (args[k].equals(field))
                         listNames.add(data[i][k]);
                 }
                 i++;
             }
-
-        } catch (ClassNotFoundException e) {
-            System.out.println("Fireberd JDBC driver not found");
         } catch (SQLException e) {
-            System.out.println("SQLException" + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Exception" + e.getMessage());
-        } finally {
-            try {
-                if (rs != null) rs.close();
-            } catch (SQLException e) {
-            }
-            try {
-                if (s != null) s.close();
-            } catch (SQLException e) {
-            }
-            try {
-                if (c != null) c.close();
-            } catch (SQLException e) {
-            }
+            throw new Error(e);
         }
         return listNames;
     }
