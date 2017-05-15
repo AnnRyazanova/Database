@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import workwithdatabase.DatabaseConnection.Column;
 
 public class TransferWindow {
     private Stage dialogStage;
@@ -34,11 +35,8 @@ public class TransferWindow {
         Label from = new Label("Откуда выполнить доставку:");
         grid.add(from, 0, 1);
 
-        String infoWarehouse[] = {"ID", "CITY", "NAME"};
-        ArrayList<String> warehouseList = 
-                connection.selectAll("WAREHOUSE", infoWarehouse, "NAME");
-
-        ObservableList<String> options = FXCollections.observableArrayList(warehouseList);
+        Column warehouseList = connection.selectColumn("WAREHOUSE", "ID", "NAME");
+        ObservableList<String> options = FXCollections.observableArrayList(warehouseList.names);
         final ComboBox warehouse1Box = new ComboBox(options);
         warehouse1Box.setValue(warehouse1Box.getItems().get(0));
 
@@ -60,8 +58,12 @@ public class TransferWindow {
         btn.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
+            int selected = warehouse2Box.getSelectionModel().getSelectedIndex();
+            int idWarehouse = warehouseList.ids.get(selected);
+            String from = "get_goods_at_warehouse(" + idWarehouse + ")";
+            Column goods = connection.selectColumn(from, "ID", "NOMENCLATURE");
             AddGoodsWindow window 
-                    = new AddGoodsWindow(dialogStage, connection, new ArrayList<>());
+                    = new AddGoodsWindow(dialogStage, connection, goods.names);
             window.show();
         }});
     }

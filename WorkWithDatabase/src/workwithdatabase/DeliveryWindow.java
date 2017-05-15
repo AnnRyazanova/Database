@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import workwithdatabase.DatabaseConnection.Column;
 
 public class DeliveryWindow {
     private Stage dialogStage;
@@ -34,24 +35,17 @@ public class DeliveryWindow {
         Label warehouse = new Label("Выберите склад:");
         grid.add(warehouse, 0, 1);
 
-        String infoWarehouse[] = {"ID", "CITY", "NAME"};
-        ArrayList<String> warehouseList = 
-                connection.selectAll("WAREHOUSE", infoWarehouse, "NAME");
-
-        ObservableList<String> options = FXCollections.observableArrayList(warehouseList);
+        Column warehouseList = connection.selectColumn("WAREHOUSE", "ID", "NAME");
+        ObservableList<String> options = FXCollections.observableArrayList(warehouseList.names);
         final ComboBox warehouseBox = new ComboBox(options);
-        warehouseBox.setValue(warehouseBox.getItems().get(0));
 
         grid.add(warehouseBox, 1, 1);                    
 
         Label client = new Label("Выберите клиента:");
         grid.add(client, 0, 2);
 
-        String infoClient[] = {"ID", "NAME", "CITY", "ADDRESS", "PHONE"};
-        ArrayList<String> clientList = 
-                connection.selectAll("CLIENT", infoClient, "NAME");
-
-        ObservableList<String> options2 = FXCollections.observableArrayList(clientList);
+        Column clientList = connection.selectColumn("CLIENT", "ID", "NAME");
+        ObservableList<String> options2 = FXCollections.observableArrayList(clientList.names);
         final ComboBox clientBox = new ComboBox(options2);
         clientBox.setValue(clientBox.getItems().get(0));
 
@@ -61,12 +55,16 @@ public class DeliveryWindow {
         HBox hbBtn = new HBox(10);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 0, 4);
-
+        
         btn.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
+            int selected = warehouseBox.getSelectionModel().getSelectedIndex();
+            int idWarehouse = warehouseList.ids.get(selected);
+            String from = "get_goods_at_warehouse(" + idWarehouse + ")";
+            Column goods = connection.selectColumn(from, "ID", "NOMENCLATURE");
             AddGoodsWindow window 
-                    = new AddGoodsWindow(dialogStage, connection, new ArrayList<>());
+                    = new AddGoodsWindow(dialogStage, connection, goods.names);
             window.show();
         }});
 

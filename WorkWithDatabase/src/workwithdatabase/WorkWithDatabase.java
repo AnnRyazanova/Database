@@ -46,7 +46,7 @@ public class WorkWithDatabase extends Application {
         GridPane grid = new GridPane();
         grid.setHgap(5);
         grid.setVgap(5);
-        grid.setPadding(new Insets(5, 5, 5, 5));
+        grid.setPadding(new Insets(25, 25, 25, 25));
         
         Text scenetitle = new Text("Выберите тип доставки : ");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));

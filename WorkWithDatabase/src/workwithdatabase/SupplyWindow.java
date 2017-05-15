@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import workwithdatabase.DatabaseConnection.Column;
 
 public class SupplyWindow {
     private Stage dialogStage;
@@ -34,11 +35,8 @@ public class SupplyWindow {
         Label agent = new Label("Выберите агента:");
         grid.add(agent, 0, 1);
 
-        String infoAgent[] = {"ID", "NAME", "PHONE", "CITY"};
-        ArrayList<String> agentList = 
-                connection.selectAll("AGENT", infoAgent, "NAME");
-
-        ObservableList<String> options = FXCollections.observableArrayList(agentList);
+        Column agentList = connection.selectColumn("AGENT", "ID", "NAME");
+        ObservableList<String> options = FXCollections.observableArrayList(agentList.names);
         final ComboBox agentBox = new ComboBox(options);
         agentBox.setValue(agentBox.getItems().get(0));
 
@@ -47,11 +45,8 @@ public class SupplyWindow {
         Label warehouse = new Label("Выберите склад:");
         grid.add(warehouse, 0, 2);
 
-        String infoWarehouse[] = {"ID", "CITY", "NAME"};
-        ArrayList<String> warehouseList = 
-                connection.selectAll("WAREHOUSE", infoWarehouse, "NAME");
-
-        ObservableList<String> options2 = FXCollections.observableArrayList(warehouseList);
+        Column warehouseList = connection.selectColumn("WAREHOUSE", "ID", "NAME");
+        ObservableList<String> options2 = FXCollections.observableArrayList(warehouseList.names);
         final ComboBox warehouseBox = new ComboBox(options2);
         warehouseBox.setValue(warehouseBox.getItems().get(0));
 
@@ -65,11 +60,9 @@ public class SupplyWindow {
         btn.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            String[] args = new String[]{"ID", "NOMENCLATURE", "MEASURE"};
-            ArrayList<String> goodsList 
-                    = connection.selectAll("GOODS", args, "NOMENCLATURE");
+            Column goodsList = connection.selectColumn("GOODS", "ID", "NOMENCLATURE");
             AddGoodsWindow window 
-                    = new AddGoodsWindow(dialogStage, connection, goodsList);
+                    = new AddGoodsWindow(dialogStage, connection, goodsList.names);
             window.show();
         }});
     }
