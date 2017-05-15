@@ -1,20 +1,6 @@
 package workwithdatabase;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -22,10 +8,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.event.*;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Modality;
 
 public class WorkWithDatabase extends Application {
     private DatabaseConnection connection;
@@ -88,7 +71,7 @@ public class WorkWithDatabase extends Application {
                 }
             }
         });
-        Scene scene = new Scene(grid, 400, 200);
+        Scene scene = new Scene(grid);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

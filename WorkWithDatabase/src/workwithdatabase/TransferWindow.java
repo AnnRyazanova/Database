@@ -25,11 +25,12 @@ public class TransferWindow {
         dialogStage.setTitle("Transfer");
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.initOwner(primaryStage);
+        dialogStage.resizableProperty().set(false);
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        Scene scene = new Scene(grid, 400, 200);
+        Scene scene = new Scene(grid);
         dialogStage.setScene(scene); 
 
         Label from = new Label("Откуда выполнить доставку:");
@@ -60,16 +61,17 @@ public class TransferWindow {
         public void handle(ActionEvent event) {
             int selected = warehouse2Box.getSelectionModel().getSelectedIndex();
             int idWarehouse = warehouseList.ids.get(selected);
-            String from = "get_goods_at_warehouse(" + idWarehouse + ")";
-            Column goods = connection.selectColumn(from, "ID", "NOMENCLATURE");
+            ArrayList<Goods> goods = connection.getGoodsAtWarehouse(idWarehouse);
             AddGoodsWindow.AddGoodsListener listener = new AddGoodsWindow.AddGoodsListener() {
                 @Override
-                public void onAddGoods(int id, String nomenclature, int count) {
+                public void onAddGoods(int index, int count) {
                     // ToDo: some shit
                 }
             };
+            ArrayList<String> nomenclatures = new ArrayList<>();
+            for (Goods good : goods) nomenclatures.add(good.nomenclature.get());
             AddGoodsWindow window 
-                    = new AddGoodsWindow(dialogStage, connection, goods, listener);
+                    = new AddGoodsWindow(dialogStage, connection, nomenclatures, listener);
             window.show();
         }});
     }

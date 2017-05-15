@@ -25,11 +25,12 @@ public class SupplyWindow {
         dialogStage.setTitle("Supply");
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.initOwner(primaryStage);
+        dialogStage.resizableProperty().set(false);
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        Scene scene = new Scene(grid, 400, 200);
+        Scene scene = new Scene(grid);
         dialogStage.setScene(scene); 
 
         Label agent = new Label("Выберите агента:");
@@ -60,15 +61,17 @@ public class SupplyWindow {
         btn.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            Column goodsList = connection.selectColumn("GOODS", "ID", "NOMENCLATURE");
+            ArrayList<Goods> goods = connection.getAllGoods();
             AddGoodsWindow.AddGoodsListener listener = new AddGoodsWindow.AddGoodsListener() {
                 @Override
-                public void onAddGoods(int id, String nomenclature, int count) {
+                public void onAddGoods(int index, int count) {
                     // ToDo: 
                 }
             };
+            ArrayList<String> nomenclatures = new ArrayList<>();
+            for (Goods good : goods) nomenclatures.add(good.nomenclature.get());
             AddGoodsWindow window 
-                    = new AddGoodsWindow(dialogStage, connection, goodsList, listener);
+                    = new AddGoodsWindow(dialogStage, connection, nomenclatures, listener);
             window.show();
         }});
     }
