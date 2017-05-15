@@ -61,8 +61,14 @@ public class SupplyWindow {
         @Override
         public void handle(ActionEvent event) {
             Column goodsList = connection.selectColumn("GOODS", "ID", "NOMENCLATURE");
+            AddGoodsWindow.AddGoodsListener listener = new AddGoodsWindow.AddGoodsListener() {
+                @Override
+                public void onAddGoods(int id, String nomenclature, int count) {
+                    // ToDo: 
+                }
+            };
             AddGoodsWindow window 
-                    = new AddGoodsWindow(dialogStage, connection, goodsList.names);
+                    = new AddGoodsWindow(dialogStage, connection, goodsList, listener);
             window.show();
         }});
     }

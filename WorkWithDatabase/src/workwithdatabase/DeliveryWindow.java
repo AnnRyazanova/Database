@@ -2,6 +2,7 @@
 package workwithdatabase;
 
 import java.util.ArrayList;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,10 +12,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import workwithdatabase.DatabaseConnection.Column;
 
 public class DeliveryWindow {
@@ -38,6 +44,7 @@ public class DeliveryWindow {
         Column warehouseList = connection.selectColumn("WAREHOUSE", "ID", "NAME");
         ObservableList<String> options = FXCollections.observableArrayList(warehouseList.names);
         final ComboBox warehouseBox = new ComboBox(options);
+        warehouseBox.setValue(warehouseBox.getItems().get(0));
 
         grid.add(warehouseBox, 1, 1);                    
 
@@ -50,11 +57,23 @@ public class DeliveryWindow {
         clientBox.setValue(clientBox.getItems().get(0));
 
         grid.add(clientBox, 1, 2);  
+        
+        ObservableList<String> goodsOptions = FXCollections.observableArrayList();
+        TableView<String> goodsTable = new TableView<>(goodsOptions);
+        TableColumn<String, String> goodsColumn = new TableColumn<>("Товары");
+        goodsColumn.setCellFactory(new Callback<TableColumn<String, String>, TableCell<String, String>>() {
+            @Override
+            public TableCell<String, String> call(TableColumn<String, String> param) {
+                TableCell cell = new TableCell<String, String>();
+                cell.setText(param.getText());
+                return cell;
+            }
+        });
+        goodsTable.getColumns().add(goodsColumn);
+        grid.add(goodsTable, 0, 3, 2, 1);
 
         Button btn = new Button("Добавить товары");
-        HBox hbBtn = new HBox(10);
-        hbBtn.getChildren().add(btn);
-        grid.add(hbBtn, 0, 4);
+        grid.add(btn, 0, 4);
         
         btn.setOnAction(new EventHandler<ActionEvent>() {
         @Override
@@ -63,10 +82,19 @@ public class DeliveryWindow {
             int idWarehouse = warehouseList.ids.get(selected);
             String from = "get_goods_at_warehouse(" + idWarehouse + ")";
             Column goods = connection.selectColumn(from, "ID", "NOMENCLATURE");
+            AddGoodsWindow.AddGoodsListener listener = new AddGoodsWindow.AddGoodsListener() {
+                @Override
+                public void onAddGoods(int id, String nomenclature, int count) {
+                    goodsOptions.add(nomenclature);
+                }
+            };
             AddGoodsWindow window 
-                    = new AddGoodsWindow(dialogStage, connection, goods.names);
+                    = new AddGoodsWindow(dialogStage, connection, goods, listener);
             window.show();
         }});
+        
+        Button btnOrder = new Button("Сделать заказ");
+        grid.add(btnOrder, 1, 4);
 
     }
     

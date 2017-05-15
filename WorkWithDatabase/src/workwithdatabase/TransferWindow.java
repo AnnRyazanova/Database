@@ -62,8 +62,14 @@ public class TransferWindow {
             int idWarehouse = warehouseList.ids.get(selected);
             String from = "get_goods_at_warehouse(" + idWarehouse + ")";
             Column goods = connection.selectColumn(from, "ID", "NOMENCLATURE");
+            AddGoodsWindow.AddGoodsListener listener = new AddGoodsWindow.AddGoodsListener() {
+                @Override
+                public void onAddGoods(int id, String nomenclature, int count) {
+                    // ToDo: some shit
+                }
+            };
             AddGoodsWindow window 
-                    = new AddGoodsWindow(dialogStage, connection, goods.names);
+                    = new AddGoodsWindow(dialogStage, connection, goods, listener);
             window.show();
         }});
     }
