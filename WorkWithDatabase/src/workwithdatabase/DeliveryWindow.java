@@ -57,7 +57,7 @@ public class DeliveryWindow {
 
         grid.add(clientBox, 1, 2);  
 
-        Button btn = new Button("Сделать заказ");
+        Button btn = new Button("Добавить товары");
         HBox hbBtn = new HBox(10);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 0, 4);
@@ -65,7 +65,9 @@ public class DeliveryWindow {
         btn.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            System.out.println("TO DO SECTION DELIVERY");
+            AddGoodsWindow window 
+                    = new AddGoodsWindow(dialogStage, connection, new ArrayList<>());
+            window.show();
         }});
 
     }

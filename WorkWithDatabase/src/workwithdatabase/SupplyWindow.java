@@ -65,7 +65,12 @@ public class SupplyWindow {
         btn.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            System.out.println("TO DO SECTION SUPPLY");
+            String[] args = new String[]{"ID", "NOMENCLATURE", "MEASURE"};
+            ArrayList<String> goodsList 
+                    = connection.selectAll("GOODS", args, "NOMENCLATURE");
+            AddGoodsWindow window 
+                    = new AddGoodsWindow(dialogStage, connection, goodsList);
+            window.show();
         }});
     }
     

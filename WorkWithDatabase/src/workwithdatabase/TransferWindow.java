@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package workwithdatabase;
 
 import java.util.ArrayList;
@@ -20,10 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-/**
- *
- * @author User
- */
 public class TransferWindow {
     private Stage dialogStage;
     
@@ -68,7 +60,9 @@ public class TransferWindow {
         btn.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            System.out.println("TO DO SECTION TRANSFER");
+            AddGoodsWindow window 
+                    = new AddGoodsWindow(dialogStage, connection, new ArrayList<>());
+            window.show();
         }});
     }
     
