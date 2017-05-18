@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane fx:id="root" hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="workwithdatabase.DeliveryWindowController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+        <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints fillHeight="false" maxHeight="-Infinity" minHeight="-Infinity" vgrow="NEVER" />
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="NEVER" />
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+    </rowConstraints>
+    <opaqueInsets>
+        <Insets />
+    </opaqueInsets>
+    <children>
+        <Label text="Выберите склад:" />
+        <Label text="Выберите клиента:" GridPane.rowIndex="1" />
+        <ComboBox fx:id="warehouse" onAction="#onWarehouseChosen" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+        <ComboBox fx:id="client" onAction="#onClientChosen" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+        <TableView fx:id="selectedGoods" prefHeight="200.0" GridPane.columnSpan="3" GridPane.rowIndex="2">
+            <columns>
+                <TableColumn editable="false" prefWidth="175.0" text="Товар">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="goods" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn editable="false" prefWidth="101.0" text="Кол-во">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="count" />
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+        <ComboBox fx:id="goods" disable="true" onAction="#onGoodsChosen" promptText="Товар" GridPane.rowIndex="3" />
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnSpan="3" GridPane.rowIndex="4">
+            <children>
+                <Button fx:id="addGoods" disable="true" mnemonicParsing="false" onAction="#onAddGoods" text="Добавить" />
+                <Button fx:id="removeGoods" disable="true" mnemonicParsing="false" onAction="#onRemoveGoods" text="Удалить" />
+                <Button fx:id="placeOrder" disable="true" mnemonicParsing="false" onAction="#onPlaceOrder" text="Оформить" />
+            </children>
+        </HBox>
+        <TextField fx:id="count" disable="true" promptText="Кол-во" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label fx:id="measure" text="__" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+    </children>
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+    </padding>
+</GridPane>

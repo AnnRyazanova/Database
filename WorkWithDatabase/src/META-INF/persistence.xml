@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="WorkWithDatabasePU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>workwithdatabase.models.Transfer</class>
+    <class>workwithdatabase.models.Client_1</class>
+    <class>workwithdatabase.models.Agent</class>
+    <class>workwithdatabase.models.Driver</class>
+    <class>workwithdatabase.models.Warehouse_1</class>
+    <class>workwithdatabase.models.Supply</class>
+    <class>workwithdatabase.models.GoodsWarehouse</class>
+    <class>workwithdatabase.models.Operation</class>
+    <class>workwithdatabase.models.Delivery</class>
+    <class>workwithdatabase.models.Goods_1</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:firebirdsql:class.mmcs.sfedu.ru/3050:/fbdata/39/randm.fdb"/>
+      <property name="javax.persistence.jdbc.user" value="it39"/>
+      <property name="javax.persistence.jdbc.driver" value="org.firebirdsql.jdbc.FBDriver"/>
+      <property name="javax.persistence.jdbc.password" value="it39"/>
+    </properties>
+  </persistence-unit>
+</persistence>
