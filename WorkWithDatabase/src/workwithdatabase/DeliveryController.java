@@ -75,11 +75,9 @@ public class DeliveryController extends GridPane implements Initializable {
         connection = WorkWithDatabase.getConnection();
         connection.getAllWarehouses((warehouses) -> {
             warehouse.setItems(FXCollections.observableArrayList(warehouses));
-            return null;
         });
         connection.getAllClients((clients) -> {
             client.setItems(FXCollections.observableArrayList(clients));
-            return null;
         });
     }
 
@@ -96,7 +94,6 @@ public class DeliveryController extends GridPane implements Initializable {
             goods.setItems(FXCollections.observableArrayList(goodsOptions));
             goods.setDisable(false);
             count.setDisable(false);
-            return null;
         });
     }
 
@@ -157,7 +154,6 @@ public class DeliveryController extends GridPane implements Initializable {
                         Stage stage = (Stage) placeOrder.getScene().getWindow();
                         stage.close();
                     }
-                    return null;
                 });
     }
 }

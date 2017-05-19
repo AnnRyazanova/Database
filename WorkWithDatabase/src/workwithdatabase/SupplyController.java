@@ -75,11 +75,9 @@ public class SupplyController extends GridPane implements Initializable {
         connection = WorkWithDatabase.getConnection();
         connection.getAllWarehouses((warehouses) -> {
             warehouse.setItems(FXCollections.observableArrayList(warehouses));
-            return null;
         });
         connection.getAllAgents((agents) -> {
             agent.setItems(FXCollections.observableArrayList(agents));
-            return null;
         });
     }
 
@@ -96,7 +94,6 @@ public class SupplyController extends GridPane implements Initializable {
             goods.setItems(FXCollections.observableArrayList(goodsOptions));
             goods.setDisable(false);
             count.setDisable(false);
-            return null;
         });
     }
 
@@ -150,15 +147,13 @@ public class SupplyController extends GridPane implements Initializable {
                 (SQLException error) -> {
                     root.setDisable(false);
                     if (null != error) {
-                        throw new RuntimeException(error);
-//                        new Alert(AlertType.ERROR, "Ошибка: " + error.getLocalizedMessage(),
-//                                ButtonType.OK).show();
+                        new Alert(AlertType.ERROR, "Ошибка: " + error.getLocalizedMessage(),
+                                  ButtonType.OK).show();
                     } else {
                         new Alert(AlertType.INFORMATION, "Готово!", ButtonType.OK).showAndWait();
                         Stage stage = (Stage) placeOrder.getScene().getWindow();
                         stage.close();
                     }
-                    return null;
                 });
     }
 }

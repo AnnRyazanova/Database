@@ -75,7 +75,6 @@ public class TransferController extends GridPane implements Initializable {
         connection.getAllWarehouses((warehouses) -> {
             source.setItems(FXCollections.observableArrayList(warehouses));
             destination.setItems(FXCollections.observableArrayList(warehouses));
-            return null;
         });
     }
 
@@ -92,7 +91,6 @@ public class TransferController extends GridPane implements Initializable {
             goods.setItems(FXCollections.observableArrayList(goodsOptions));
             goods.setDisable(false);
             count.setDisable(false);
-            return null;
         });
     }
 
@@ -153,7 +151,6 @@ public class TransferController extends GridPane implements Initializable {
                         Stage stage = (Stage) placeOrder.getScene().getWindow();
                         stage.close();
                     }
-                    return null;
                 });
     }
 }

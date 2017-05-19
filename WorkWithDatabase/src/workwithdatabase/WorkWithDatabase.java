@@ -22,11 +22,11 @@ public class WorkWithDatabase extends Application {
         try {
             FXMLLoader mainWindowLoader = new FXMLLoader(getClass().getResource("main.fxml"));
             primaryStage.setScene(new Scene((Parent) mainWindowLoader.load()));
-            primaryStage.setTitle("Выберите операцию");
+            primaryStage.setTitle("Действия");
             primaryStage.setResizable(false);
             primaryStage.show();
         } catch (IOException e) {
-            throw new Error(e);
+            e.printStackTrace(System.err);
         }
     }
 

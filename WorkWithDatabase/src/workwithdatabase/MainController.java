@@ -14,7 +14,7 @@ public class MainController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     private <T> void runDialog(String title, Parent root) throws IOException {
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
@@ -39,9 +39,9 @@ public class MainController {
     private void onMakeSupply() throws IOException {
         runDialog("Поставка", new SupplyController());
     }
-    
+
     @FXML
     private void onGoodsTable() throws IOException {
-        runDialog("Справочник товаров", new GoodsTableController());
+//        runDialog("Справочник товаров", new GoodsTableController());
     }
 }
