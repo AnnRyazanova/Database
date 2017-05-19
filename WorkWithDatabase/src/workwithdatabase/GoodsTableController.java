@@ -24,7 +24,7 @@ public class GoodsTableController extends GridPane implements Initializable {
     @FXML
     private TableView<Goods> goodsTable;
     @FXML
-    private TextField name;
+    private TextField nomenclature;
     @FXML
     private TextField measure;
     @FXML
@@ -59,8 +59,8 @@ public class GoodsTableController extends GridPane implements Initializable {
 
     @FXML
     private void onAddGoods() {
-        String nameValue = name.getText();
-        if (nameValue.isEmpty()) {
+        String nomenclatureValue = nomenclature.getText();
+        if (nomenclatureValue.isEmpty()) {
             new Alert(AlertType.WARNING, "Поле \"Имя\" не должно быть пустым", ButtonType.OK)
                     .showAndWait();
             return;
@@ -71,10 +71,10 @@ public class GoodsTableController extends GridPane implements Initializable {
                     .showAndWait();
             return;
         }
-        name.clear();
+        nomenclature.clear();
         measure.clear();
         add.setDisable(true);
-        connection.addGoods(nameValue, measureValue, (error) -> {
+        connection.addGoods(nomenclatureValue, measureValue, (error) -> {
             add.setDisable(false);
             if (null != error) {
                 new Alert(AlertType.ERROR, "Не удалось добавтиь товар", ButtonType.OK)
@@ -87,6 +87,19 @@ public class GoodsTableController extends GridPane implements Initializable {
     
     @FXML
     private void onDeleteGoods() {
+        Goods goodsToDelete = goodsTable.getSelectionModel().getSelectedItem();
+        add.setDisable(true);
+        delete.setDisable(true);
+        connection.removeGoods(goodsToDelete, (error) -> {
+            add.setDisable(false);
+            delete.setDisable(false);
+            if (null != error) {
+                new Alert(AlertType.ERROR, "Не удалось добавтиь товар", ButtonType.OK)
+                        .showAndWait();
+                return;
+            }
+            updateGoodsTable();
+        });
     }
 
     @FXML

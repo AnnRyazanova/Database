@@ -4,10 +4,11 @@
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<fx:root hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="GridPane" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
@@ -19,25 +20,33 @@
       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TableView prefHeight="300.0" GridPane.columnSpan="2">
+      <TableView fx:id="goodsTable" prefHeight="300.0" GridPane.columnSpan="2">
          <columns>
-            <TableColumn minWidth="0.0" prefWidth="221.0" resizable="false" text="Название" />
-            <TableColumn minWidth="0.0" prefWidth="74.0" resizable="false" text="Единицы" />
+            <TableColumn editable="false" prefWidth="164.0" resizable="false" text="Название">
+                <cellValueFactory>
+                    <PropertyValueFactory property="nomenclature" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn editable="false" prefWidth="71.0" resizable="false" text="Единицы">
+                <cellValueFactory>
+                    <PropertyValueFactory property="measure" />
+                </cellValueFactory>
+            </TableColumn>
          </columns>
       </TableView>
       <Label text="Название" GridPane.rowIndex="1" />
       <Label text="Единицы" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField promptText="Яблоки" GridPane.rowIndex="2" />
-      <TextField promptText="кг" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <TextField fx:id="nomenclature" promptText="Яблоки" GridPane.rowIndex="2" />
+      <TextField fx:id="measure" promptText="кг" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <HBox spacing="10.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
          <children>
             <Region maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="Добавить" />
-            <Button mnemonicParsing="false" text="Удалить" />
+            <Button fx:id="add" mnemonicParsing="false" onAction="#onAddGoods" text="Добавить" />
+            <Button fx:id="delete" mnemonicParsing="false" onAction="#onDeleteGoods" text="Удалить" />
          </children>
       </HBox>
    </children>
    <padding>
       <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
    </padding>
-</GridPane>
+</fx:root>

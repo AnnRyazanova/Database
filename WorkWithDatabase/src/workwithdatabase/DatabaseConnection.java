@@ -11,6 +11,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import workwithdatabase.models.Agent;
 import workwithdatabase.models.Client;
@@ -38,38 +40,30 @@ public class DatabaseConnection {
         connection = DriverManager.getConnection(databaseURL, user, password);
         connection.setAutoCommit(false);
     }
-    
-    private void runAsynchronously(Action workerThread, Action uiThread) {
-        new Thread(() -> {
-            Utils.catchAll(() -> {
-                workerThread.call();
-                Platform.runLater(() -> {
-                    Utils.catchAll(() -> uiThread.call());
-                });
-            });
-        }).run();
-    }
 
     private <T> void query(String query, Callback<ArrayList<T>> callback,
             ObjectFactory<T> factory) {
-        final ArrayList<T> objects = new ArrayList<>();
-        runAsynchronously(
-                () -> { 
-                    synchronized (connection) {
-                        try (Statement statement = connection.createStatement()) {
-                            statement.execute(query);
-                            try (ResultSet resultSet = statement.getResultSet()) {
-                                while (resultSet.next()) {
-                                    objects.add(factory.create(resultSet));
-                                }
-                            }
-                            connection.commit();
+        new Thread(() -> {
+            ArrayList<T> objects = new ArrayList<>();
+            synchronized (connection) {
+                try (Statement statement = connection.createStatement()) {
+                    statement.execute(query);
+                    try (ResultSet resultSet = statement.getResultSet()) {
+                        while (resultSet.next()) {
+                            objects.add(factory.create(resultSet));
                         }
                     }
-                }, 
-                () -> { 
+                    connection.commit();
+                } catch (SQLException e) {
+                    // It's better to pass this error to higher layers 
+                    // but only 3 days left.
+                    throw new RuntimeException(e);
+                }
+                Platform.runLater(() -> {
                     callback.call(objects);
                 });
+            }
+        }).start();
     }
 
     public void getAllGoods(Callback<ArrayList<Goods>> callback) {
@@ -124,138 +118,164 @@ public class DatabaseConnection {
             return new Agent(id, name, phone, city);
         });
     }
+    
+    private void rollback() {
+        try {
+            connection.rollback();
+        } catch (SQLException e1) {
+            e1.printStackTrace(System.err);
+            System.exit(-1);
+        }
+    }
 
     public void createDelivery(Warehouse warehouse, Client client,
             List<SelectedGoods> goods,
             Callback<SQLException> callback) {
-        runAsynchronously(
-                () -> { 
-                    synchronized (connection) {
-                        int deliveryId;
-                        try {
-                            try (Statement statement = connection.createStatement();
-                                    ResultSet resultSet
-                                    = statement.executeQuery("execute procedure create_delivery("
-                                            + client.id + ")")) {
-                                resultSet.next();
-                                deliveryId = resultSet.getInt(1);
-                            }
-                            for (SelectedGoods selectedGoods : goods) {
-                                try (Statement statement = connection.createStatement()) {
-                                    statement.execute(
-                                            "execute procedure add_goods_to_delivery("
-                                            + deliveryId + ", " + warehouse.id + ", "
-                                            + selectedGoods.getGoods().id + ", "
-                                            + selectedGoods.getCount() + ")");
-                                }
-                            }
-                            connection.commit();
-                        } catch (SQLException e) {
-                            Utils.catchAll(() -> connection.rollback());
-                            Platform.runLater(() -> {
-                                Utils.catchAll(() -> callback.call(e));
-                            });
+        new Thread(() -> {
+            synchronized (connection) {
+                int deliveryId;
+                try {
+                    try (Statement statement = connection.createStatement();
+                            ResultSet resultSet
+                            = statement.executeQuery("execute procedure create_delivery("
+                                    + client.getId() + ")")) {
+                        resultSet.next();
+                        deliveryId = resultSet.getInt(1);
+                    }
+                    for (SelectedGoods selectedGoods : goods) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "execute procedure add_goods_to_delivery("
+                                    + deliveryId + ", " + warehouse.getId() + ", "
+                                    + selectedGoods.getGoods().getId() + ", "
+                                    + selectedGoods.getCount() + ")");
                         }
                     }
-                }, 
-                () -> { 
+                    connection.commit();
                     Platform.runLater(() -> {
-                        Utils.catchAll(() -> callback.call(null));
+                        callback.call(null);
                     });
-                });
+                } catch (SQLException e) {
+                    rollback();
+                    Platform.runLater(() -> {
+                        callback.call(e);
+                    });
+                }
+            }
+        }).start();
     }
 
     public void createTransfer(Warehouse source, Warehouse destination, List<SelectedGoods> goods,
             Callback<SQLException> callback) {
-        runAsynchronously(
-                () -> {
-                    synchronized (connection) {
-                        int transferId;
-                        try {
-                            try (Statement statement = connection.createStatement();
-                                    ResultSet resultSet
-                                    = statement.executeQuery(
-                                            "execute procedure create_transfer("
-                                            + source.id + ", " + destination.id + ")")) {
-                                resultSet.next();
-                                transferId = resultSet.getInt(1);
-                            }
-                            for (SelectedGoods selectedGoods : goods) {
-                                try (Statement statement = connection.createStatement()) {
-                                    statement.execute(
-                                            "execute procedure add_goods_to_transfer("
-                                            + transferId + ", "
-                                            + selectedGoods.getGoods().id + ", "
-                                            + selectedGoods.getCount() + ")");
-                                }
-                            }
-                            connection.commit();
-                        } catch (SQLException e) {
-                            Utils.catchAll(() -> connection.rollback());
-                            Platform.runLater(() -> {
-                                Utils.catchAll(() -> callback.call(e));
-                            });
+        new Thread(() -> {
+            synchronized (connection) {
+                int transferId;
+                try {
+                    try (Statement statement = connection.createStatement();
+                            ResultSet resultSet
+                            = statement.executeQuery(
+                                    "execute procedure create_transfer("
+                                    + source.getId() + ", " + destination.getId() + ")")) {
+                        resultSet.next();
+                        transferId = resultSet.getInt(1);
+                    }
+                    for (SelectedGoods selectedGoods : goods) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "execute procedure add_goods_to_transfer("
+                                    + transferId + ", "
+                                    + selectedGoods.getGoods().getMeasure() + ", "
+                                    + selectedGoods.getCount() + ")");
                         }
                     }
-                }, 
-                () -> { 
+                    connection.commit();
                     Platform.runLater(() -> {
-                        Utils.catchAll(() -> callback.call(null));
+                        callback.call(null);
                     });
-                });
+                } catch (SQLException e) {
+                    rollback();
+                    Platform.runLater(() -> {
+                        callback.call(e);
+                    });
+                }
+            }
+        }).start();
     }
 
     public void createSupply(Warehouse warehouse, Agent agent, List<SelectedGoods> goods,
             Callback<SQLException> callback) {
-        runAsynchronously(
-                () -> {
-                    synchronized (connection) {
-                        int supplyId;
-                        try {
-                            try (Statement statement = connection.createStatement();
-                                    ResultSet resultSet
-                                    = statement.executeQuery(
-                                            "execute procedure create_supply")) {
-                                resultSet.next();
-                                supplyId = resultSet.getInt(1);
-                            }
-                            for (SelectedGoods selectedGoods : goods) {
-                                try (Statement statement = connection.createStatement()) {
-                                    statement.execute(
-                                            "execute procedure add_goods_to_supply("
-                                            + supplyId + ", "
-                                            + warehouse.id + ", "
-                                            + selectedGoods.getGoods().id + ", "
-                                            + selectedGoods.getCount() + ")");
-                                }
-                            }
-                            connection.commit();
-                        } catch (SQLException e) {
-                            Utils.catchAll(() -> connection.rollback());
-                            Platform.runLater(() -> {
-                                Utils.catchAll(() -> callback.call(e));
-                            });
-                        }
-                    }
-                }, 
-                () -> { 
-                    Platform.runLater(() -> {
-                        Utils.catchAll(() -> callback.call(null));
-                    });
-                });
-    }
-    
-    public void addGoods(String nomenclature, String measure, Callback<SQLException> callback)  {
         new Thread(() -> {
             synchronized (connection) {
-                try (PreparedStatement statement = connection.prepareStatement("insert into goods(nomenclature, measure) values(?, ?)")) {
+                int supplyId;
+                try {
+                    try (Statement statement = connection.createStatement();
+                            ResultSet resultSet
+                            = statement.executeQuery(
+                                    "execute procedure create_supply")) {
+                        resultSet.next();
+                        supplyId = resultSet.getInt(1);
+                    }
+                    for (SelectedGoods selectedGoods : goods) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "execute procedure add_goods_to_supply("
+                                    + supplyId + ", "
+                                    + warehouse.getId() + ", "
+                                    + selectedGoods.getGoods().getId() + ", "
+                                    + selectedGoods.getCount() + ")");
+                        }
+                    }
+                    connection.commit();
+                    Platform.runLater(() -> {
+                        callback.call(null);
+                    });
+                } catch (SQLException e) {
+                    rollback();
+                    Platform.runLater(() -> {
+                        callback.call(e);
+                    });
+                }
+            }
+        }).start();
+    }
+
+    public void addGoods(String nomenclature, String measure, Callback<SQLException> callback) {
+        new Thread(() -> {
+            synchronized (connection) {
+                try (PreparedStatement statement
+                        = connection.prepareStatement(
+                                "insert into goods(nomenclature, measure) values(?, ?)")) {
                     statement.setString(1, nomenclature);
                     statement.setString(2, measure);
                     statement.execute();
                     connection.commit();
-                    
+                    Platform.runLater(() -> {
+                        callback.call(null);
+                    });
                 } catch (SQLException e) {
-                    
+                    rollback();
+                    Platform.runLater(() -> {
+                        callback.call(e);
+                    });
+                }
+            }
+        }).start();
+    }
+
+    public void removeGoods(Goods goods, Callback<SQLException> callback) {
+        new Thread(() -> {
+            synchronized (connection) {
+                try (Statement statement = connection.createStatement()) {
+                    statement.execute("delete from goods where id = " + goods.getId());
+                    connection.commit();
+                    Platform.runLater(() -> {
+                        callback.call(null);
+                    });
+                } catch (SQLException e) {
+                    rollback();
+                    Platform.runLater(() -> {
+                        callback.call(e);
+                    });
                 }
             }
         }).start();

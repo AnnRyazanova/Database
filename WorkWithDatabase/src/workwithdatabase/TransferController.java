@@ -64,7 +64,7 @@ public class TransferController extends GridPane implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         measureColumn.setCellValueFactory(((cell) -> {
-            return new SimpleStringProperty(cell.getValue().getGoods().measure);
+            return new SimpleStringProperty(cell.getValue().getGoods().getMeasure());
         }));
         selectedGoods.getSelectionModel()
                 .selectedItemProperty()
@@ -87,7 +87,7 @@ public class TransferController extends GridPane implements Initializable {
             return;
         }
         selectedGoods.getItems().clear();
-        connection.getGoodsAtWarehouse(chosenWarehouse.id, (goodsOptions) -> {
+        connection.getGoodsAtWarehouse(chosenWarehouse.getId(), (goodsOptions) -> {
             goods.setItems(FXCollections.observableArrayList(goodsOptions));
             goods.setDisable(false);
             count.setDisable(false);
@@ -107,7 +107,7 @@ public class TransferController extends GridPane implements Initializable {
             measure.setText("  ");
             return;
         }
-        measure.setText(selected.measure);
+        measure.setText(selected.getMeasure());
         addGoods.setDisable(false);
     }
 

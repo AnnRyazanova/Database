@@ -2,9 +2,9 @@ package workwithdatabase.models;
 
 public class Warehouse {
 
-    public final int id;
-    public final String city;
-    public final String name;
+    private int id;
+    private String city;
+    private String name;
 
     public Warehouse(int id, String city, String name) {
         this.id = id;
@@ -16,4 +16,31 @@ public class Warehouse {
     public String toString() {
         return name;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
+    
 }
