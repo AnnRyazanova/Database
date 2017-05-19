@@ -21,10 +21,10 @@
         <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
     </rowConstraints>
     <children>
-        <Label text="Выберите склад:" />
-        <Label text="Выберите клиента:" GridPane.rowIndex="1" />
-        <ComboBox fx:id="warehouse" onAction="#onWarehouseChosen" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-        <ComboBox fx:id="client" onAction="#onClientChosen" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+        <Label text="Откуда:" />
+        <Label text="Куда:" GridPane.rowIndex="1" />
+        <ComboBox fx:id="source" onAction="#onSourceChosen" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+        <ComboBox fx:id="destination" onAction="#onDestinationChosen" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
         <TableView fx:id="selectedGoods" prefHeight="200.0" GridPane.columnSpan="3" GridPane.rowIndex="2">
             <columns>
                 <TableColumn editable="false" prefWidth="164.0" resizable="false" text="Товар">

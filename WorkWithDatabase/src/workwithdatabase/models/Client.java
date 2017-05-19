@@ -1,12 +1,13 @@
 package workwithdatabase.models;
 
 public class Client {
+
     public final int id;
     public final String name;
     public final String city;
     public final String address;
     public final String phone;
-    
+
     public Client(int id, String name, String city, String address, String phone) {
         this.id = id;
         this.name = name;
@@ -19,4 +20,5 @@ public class Client {
     public String toString() {
         return name;
     }
+
 }

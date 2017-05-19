@@ -4,6 +4,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 
 public class IntegerTextField extends TextField {
+
     public IntegerTextField() {
         setText("0");
         setTextFormatter(new TextFormatter<>((change) -> {
@@ -15,7 +16,7 @@ public class IntegerTextField extends TextField {
             }
         }));
     }
-    
+
     public int getValue() {
         try {
             return Integer.parseInt(getText());

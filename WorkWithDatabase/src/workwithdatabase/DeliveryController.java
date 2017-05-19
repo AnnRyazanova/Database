@@ -1,16 +1,14 @@
-
 package workwithdatabase;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -18,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -26,24 +25,8 @@ import workwithdatabase.models.Client;
 import workwithdatabase.models.Goods;
 import workwithdatabase.models.Warehouse;
 
-public class DeliveryWindowController implements Initializable {
-    public static final class SelectedGoods {
-        public final ObjectProperty<Goods> goods = new SimpleObjectProperty<>();
-        public final IntegerProperty count = new SimpleIntegerProperty();
-        
-        public SelectedGoods() { this(new Goods(), 0); }
-        
-        public SelectedGoods(Goods goods, int count) {
-            setGoods(goods);
-            setCount(count);
-        }
+public class DeliveryController extends GridPane implements Initializable {
 
-        public Goods getGoods() { return goods.get(); }
-        public int getCount()    { return count.get(); }
-        public void setGoods(Goods goods) { this.goods.set(goods); }
-        public void setCount(int count)    { this.count.set(count); }
-    };
-    
     @FXML
     private GridPane root;
     @FXML
@@ -52,6 +35,8 @@ public class DeliveryWindowController implements Initializable {
     private ComboBox<Client> client;
     @FXML
     private TableView<SelectedGoods> selectedGoods;
+    @FXML
+    private TableColumn<SelectedGoods, String> measureColumn;
     @FXML
     private TextField count;
     @FXML
@@ -64,36 +49,48 @@ public class DeliveryWindowController implements Initializable {
     private Button placeOrder;
     @FXML
     private Label measure;
-    
+
     private DatabaseConnection connection;
-    
+
     private boolean isClientSelected = false;
     private boolean isWarehouseSelected = false;
 
+    public DeliveryController() throws IOException {
+        FXMLLoader deliveryWindowLoader = new FXMLLoader(getClass().getResource("delivery.fxml"));
+        deliveryWindowLoader.setController(this);
+        deliveryWindowLoader.setRoot(this);
+        deliveryWindowLoader.load();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        measureColumn.setCellValueFactory(((cell) -> {
+            return new SimpleStringProperty(cell.getValue().getGoods().measure);
+        }));
         selectedGoods.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
                     removeGoods.setDisable(null == newValue);
                 });
         connection = WorkWithDatabase.getConnection();
-        connection.getAllWarehouses((warehouses) -> { 
+        connection.getAllWarehouses((warehouses) -> {
             warehouse.setItems(FXCollections.observableArrayList(warehouses));
             return null;
         });
-        connection.getAllClients((clients) -> { 
+        connection.getAllClients((clients) -> {
             client.setItems(FXCollections.observableArrayList(clients));
             return null;
         });
     }
-    
+
     @FXML
     private void onWarehouseChosen() {
         Warehouse chosenWarehouse = warehouse.getSelectionModel().getSelectedItem();
         isWarehouseSelected = chosenWarehouse != null;
         placeOrder.setDisable(!isClientSelected || !isWarehouseSelected);
-        if (!isWarehouseSelected) return;
+        if (!isWarehouseSelected) {
+            return;
+        }
         selectedGoods.getItems().clear();
         connection.getGoodsAtWarehouse(chosenWarehouse.id, (goodsOptions) -> {
             goods.setItems(FXCollections.observableArrayList(goodsOptions));
@@ -102,13 +99,13 @@ public class DeliveryWindowController implements Initializable {
             return null;
         });
     }
-    
+
     @FXML
     private void onClientChosen() {
         isClientSelected = client.getSelectionModel().getSelectedItem() != null;
         placeOrder.setDisable(!isClientSelected || !isWarehouseSelected);
     }
-    
+
     @FXML
     private void onGoodsChosen() {
         Goods selected = goods.getSelectionModel().getSelectedItem();
@@ -119,7 +116,7 @@ public class DeliveryWindowController implements Initializable {
         measure.setText(selected.measure);
         addGoods.setDisable(false);
     }
-    
+
     @FXML
     private void onAddGoods() {
         Goods selected = goods.getSelectionModel().getSelectedItem();
@@ -137,23 +134,23 @@ public class DeliveryWindowController implements Initializable {
         }
         selectedGoods.getItems().add(new SelectedGoods(selected, countValue));
     }
-    
+
     @FXML
     private void onRemoveGoods() {
         selectedGoods.getItems().remove(selectedGoods.getSelectionModel().getSelectedIndex());
-    } 
-    
+    }
+
     @FXML
     private void onPlaceOrder() {
         root.setDisable(true);
         Warehouse selectedWarehouse = warehouse.getSelectionModel().getSelectedItem();
         Client selectedClient = client.getSelectionModel().getSelectedItem();
         ObservableList<SelectedGoods> listOfSelectedGoods = selectedGoods.getItems();
-        connection.createDelivery(selectedWarehouse, selectedClient, listOfSelectedGoods, 
+        connection.createDelivery(selectedWarehouse, selectedClient, listOfSelectedGoods,
                 (SQLException error) -> {
                     root.setDisable(false);
                     if (null != error) {
-                        new Alert(AlertType.ERROR, "Ошибка: " + error.getLocalizedMessage(), 
+                        new Alert(AlertType.ERROR, "Ошибка: " + error.getLocalizedMessage(),
                                 ButtonType.OK).show();
                     } else {
                         new Alert(AlertType.INFORMATION, "Готово!", ButtonType.OK).showAndWait();
@@ -162,5 +159,5 @@ public class DeliveryWindowController implements Initializable {
                     }
                     return null;
                 });
-    } 
+    }
 }

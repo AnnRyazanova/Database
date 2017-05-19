@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class WorkWithDatabase extends Application {
+
     private static DatabaseConnection connection;
 
     @Override
@@ -15,7 +16,7 @@ public class WorkWithDatabase extends Application {
         super.init();
         connection = new DatabaseConnection();
     }
-    
+
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -28,9 +29,11 @@ public class WorkWithDatabase extends Application {
             throw new Error(e);
         }
     }
-    
-    public static DatabaseConnection getConnection() { return connection; }
-    
+
+    public static DatabaseConnection getConnection() {
+        return connection;
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

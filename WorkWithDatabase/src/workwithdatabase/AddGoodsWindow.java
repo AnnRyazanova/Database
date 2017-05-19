@@ -13,16 +13,18 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class AddGoodsWindow {
+
     public interface AddGoodsListener {
+
         void onAddGoods(int index, int count);
     }
-    
+
     private final Label labelLoading;
     private final GridPane gridPaneContent;
     private ComboBox comboBoxGoods;
-    
+
     private final Stage dialogStage;
-    
+
     public AddGoodsWindow(Stage parent, DatabaseConnection connection, AddGoodsListener listener) {
         dialogStage = new Stage();
         dialogStage.setTitle("Добавить товар");
@@ -34,13 +36,13 @@ public class AddGoodsWindow {
         gridPaneContent.setPadding(new Insets(25));
         gridPaneContent.add(new Label("Товар"), 0, 0);
         gridPaneContent.add(new Label("Количество"), 1, 0);
-        
+
         comboBoxGoods = new ComboBox();
-        gridPaneContent.add(comboBoxGoods, 0, 1); 
-        
+        gridPaneContent.add(comboBoxGoods, 0, 1);
+
         IntegerTextField count = new IntegerTextField();
         gridPaneContent.add(count, 1, 1);
-        
+
         Button add = new Button();
         add.setText("Добавить");
         gridPaneContent.add(add, 2, 1);
@@ -55,11 +57,11 @@ public class AddGoodsWindow {
         dialogStage.setScene(new Scene(stackPane));
         dialogStage.show();
     }
-    
+
     public void setGoods(List<String> goods) {
         comboBoxGoods.setItems(FXCollections.observableArrayList(goods));
         labelLoading.setVisible(false);
         gridPaneContent.setVisible(true);
     }
-    
+
 }
