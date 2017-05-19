@@ -42,6 +42,6 @@ public class MainController {
     
     @FXML
     private void onGoodsTable() throws IOException {
-        runDialog("Справочник товаров", new GoodsTableController());
+//        runDialog("Справочник товаров", new GoodsTableController());
     }
 }
