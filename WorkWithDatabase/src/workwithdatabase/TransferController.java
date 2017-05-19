@@ -79,7 +79,7 @@ public class TransferController extends GridPane implements Initializable {
     }
 
     @FXML
-    private void onWarehouseChosen() {
+    private void onSourceChosen() {
         Warehouse chosenWarehouse = source.getSelectionModel().getSelectedItem();
         isDestinationSelected = chosenWarehouse != null;
         placeOrder.setDisable(!isSourceSelected || !isDestinationSelected);
@@ -95,7 +95,7 @@ public class TransferController extends GridPane implements Initializable {
     }
 
     @FXML
-    private void onAgentChosen() {
+    private void onDestinationChosen() {
         isSourceSelected = destination.getSelectionModel().getSelectedItem() != null;
         placeOrder.setDisable(!isSourceSelected || !isDestinationSelected);
     }
