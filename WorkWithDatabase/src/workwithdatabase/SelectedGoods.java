@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import workwithdatabase.models.Goods;
 
 public final class SelectedGoods {
-    
+
     public final ObjectProperty<Goods> goods = new SimpleObjectProperty<>();
     public final IntegerProperty count = new SimpleIntegerProperty();
 
@@ -35,5 +35,5 @@ public final class SelectedGoods {
     public void setCount(int count) {
         this.count.set(count);
     }
-    
+
 }

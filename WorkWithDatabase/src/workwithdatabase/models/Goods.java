@@ -1,48 +1,65 @@
 package workwithdatabase.models;
 
-public class Goods {
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
-    private int id;
-    private String nomenclature;
-    private String measure;
+public final class Goods {
+
+    private final IntegerProperty id = new SimpleIntegerProperty();
+    private final StringProperty nomenclature = new SimpleStringProperty();
+    private final StringProperty measure = new SimpleStringProperty();
 
     public Goods() {
         this(0, "", "");
     }
 
     public Goods(int id, String nomenclature, String measure) {
-        this.id = id;
-        this.nomenclature = nomenclature;
-        this.measure = measure;
+        setId(id);
+        setNomenclature(nomenclature);
+        setMeasure(measure);
     }
 
     @Override
     public String toString() {
-        return nomenclature;
+        return nomenclature.get();
     }
 
     public int getId() {
-        return id;
+        return id.get();
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id.set(id);
     }
 
     public String getNomenclature() {
-        return nomenclature;
+        return nomenclature.get();
     }
 
     public void setNomenclature(String nomenclature) {
-        this.nomenclature = nomenclature;
+        this.nomenclature.set(nomenclature);
     }
 
     public String getMeasure() {
-        return measure;
+        return measure.get();
     }
 
     public void setMeasure(String measure) {
-        this.measure = measure;
+        this.measure.set(measure);
     }
 
+    public IntegerProperty idProperty() {
+        return id;
+    }
+    
+    public StringProperty nomenclatureProperty() {
+        return nomenclature;
+    }
+    
+    public StringProperty measureProperty() {
+        return measure;
+    }
+    
 }

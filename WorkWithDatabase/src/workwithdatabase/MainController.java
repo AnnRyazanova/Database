@@ -42,6 +42,12 @@ public class MainController {
 
     @FXML
     private void onGoodsTable() throws IOException {
-        runDialog("Справочник товаров", new GoodsTableController());
+        Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.initOwner(stage);
+        window.setTitle("Справочник товаров");
+        window.setResizable(false);
+        window.setScene(new Scene(GoodsTableController.create()));
+        window.showAndWait();
     }
 }

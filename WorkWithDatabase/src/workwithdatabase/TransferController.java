@@ -75,6 +75,10 @@ public class TransferController extends GridPane implements Initializable {
         connection.getAllWarehouses((warehouses) -> {
             source.setItems(FXCollections.observableArrayList(warehouses));
             destination.setItems(FXCollections.observableArrayList(warehouses));
+            if (!warehouses.isEmpty()) {
+                source.getSelectionModel().selectFirst();
+                destination.getSelectionModel().selectFirst();
+            }
         });
     }
 

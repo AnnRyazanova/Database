@@ -7,13 +7,13 @@
 
 
 <VBox spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="workwithdatabase.MainController">
-   <children>
+    <children>
         <Button mnemonicParsing="false" onAction="#onMakeDelivery" text="Оформить доставку" />
         <Button mnemonicParsing="false" onAction="#onMakeTransfer" text="Оформить транспортировку" />
         <Button mnemonicParsing="false" onAction="#onMakeSupply" text="Оформить поставку" />
-      <Button mnemonicParsing="false" onAction="#onGoodsTable" text="Справочник товаров" />
-   </children>
-   <padding>
-      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-   </padding>
+        <Button mnemonicParsing="false" onAction="#onGoodsTable" text="Справочник товаров" />
+    </children>
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+    </padding>
 </VBox>

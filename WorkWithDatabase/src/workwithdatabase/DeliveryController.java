@@ -75,9 +75,15 @@ public class DeliveryController extends GridPane implements Initializable {
         connection = WorkWithDatabase.getConnection();
         connection.getAllWarehouses((warehouses) -> {
             warehouse.setItems(FXCollections.observableArrayList(warehouses));
+            if (!warehouses.isEmpty()) {
+                warehouse.getSelectionModel().selectFirst();
+            }
         });
         connection.getAllClients((clients) -> {
             client.setItems(FXCollections.observableArrayList(clients));
+            if (!clients.isEmpty()) {
+                client.getSelectionModel().selectFirst();
+            }
         });
     }
 
