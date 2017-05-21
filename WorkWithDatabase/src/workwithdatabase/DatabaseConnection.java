@@ -146,14 +146,10 @@ public class DatabaseConnection {
                 }
             }
             connection.commit();
-            Platform.runLater(() -> {
-                callback.call(null);
-            });
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
-            Platform.runLater(() -> {
-                callback.call(e);
-            });
+            Platform.runLater(() -> callback.call(e));
         }
     }
     
@@ -184,14 +180,10 @@ public class DatabaseConnection {
                 }
             }
             connection.commit();
-            Platform.runLater(() -> {
-                callback.call(null);
-            });
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
-            Platform.runLater(() -> {
-                callback.call(e);
-            });
+            Platform.runLater(() -> callback.call(e));
         }
     }
     
@@ -222,14 +214,10 @@ public class DatabaseConnection {
                 }
             }
             connection.commit();
-            Platform.runLater(() -> {
-                callback.call(null);
-            });
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
-            Platform.runLater(() -> {
-                callback.call(e);
-            });
+            Platform.runLater(() -> callback.call(e));
         }
     }
 
@@ -246,9 +234,7 @@ public class DatabaseConnection {
             statement.setString(2, measure);
             statement.execute();
             connection.commit();
-            Platform.runLater(() -> {
-                callback.call(null);
-            });
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
             Platform.runLater(() -> {
@@ -265,9 +251,7 @@ public class DatabaseConnection {
         try (Statement statement = connection.createStatement()) {
             statement.execute("delete from goods where id = " + goods.getId());
             connection.commit();
-            Platform.runLater(() -> {
-                callback.call(null);
-            });
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
             Platform.runLater(() -> callback.call(e));
@@ -285,6 +269,8 @@ public class DatabaseConnection {
             statement.setString(1, goods.getNomenclature());
             statement.setInt(2, goods.getId());
             statement.execute();
+            connection.commit();
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
             Platform.runLater(() -> callback.call(e));
@@ -302,6 +288,8 @@ public class DatabaseConnection {
             statement.setString(1, goods.getMeasure());
             statement.setInt(2, goods.getId());
             statement.execute();
+            connection.commit();
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
             Platform.runLater(() -> callback.call(e));
@@ -342,9 +330,7 @@ public class DatabaseConnection {
         try (Statement statement = connection.createStatement()) {
             statement.execute("delete from agent where id = " + agent.getId());
             connection.commit();
-            Platform.runLater(() -> {
-                callback.call(null);
-            });
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
             Platform.runLater(() -> callback.call(e));
@@ -362,6 +348,8 @@ public class DatabaseConnection {
             statement.setString(1, agent.getName());
             statement.setInt(2, agent.getId());
             statement.execute();
+            connection.commit();
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
             Platform.runLater(() -> callback.call(e));
@@ -379,6 +367,8 @@ public class DatabaseConnection {
             statement.setString(1, agent.getPhone());
             statement.setInt(2, agent.getId());
             statement.execute();
+            connection.commit();
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
             Platform.runLater(() -> callback.call(e));
@@ -396,6 +386,8 @@ public class DatabaseConnection {
             statement.setString(1, agent.getCity());
             statement.setInt(2, agent.getId());
             statement.execute();
+            connection.commit();
+            Platform.runLater(() -> callback.call(null));
         } catch (SQLException e) {
             rollback();
             Platform.runLater(() -> callback.call(e));

@@ -22,6 +22,8 @@ tomcat
 *.sar
 *.class
 
+!jaybird-full-3.0.0.jar
+
 # Maven 
 target/
 
