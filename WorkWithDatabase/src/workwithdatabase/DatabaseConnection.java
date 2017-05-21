@@ -294,4 +294,115 @@ public class DatabaseConnection {
     public void changeGoodsNomenclature(Goods goods, Callback<SQLException> callback) {
         new Thread(() -> changeGoodsNomenclatureInternal(goods, callback)).start();
     }
+    
+    private synchronized void changeGoodsMeasureInternal(Goods goods,
+            Callback<SQLException> callback) {
+        String query = "update goods set measure = ? where id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, goods.getMeasure());
+            statement.setInt(2, goods.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            rollback();
+            Platform.runLater(() -> callback.call(e));
+        }
+    }
+
+    public void changeGoodsMeasure(Goods goods, Callback<SQLException> callback) {
+        new Thread(() -> changeGoodsMeasureInternal(goods, callback)).start();
+    }
+    
+    
+    private synchronized void addAgentsInternal(String name, String phone, String city,
+            Callback<SQLException> callback) {
+        String query = "insert into agent(name, phone, city) values(?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, name);
+            statement.setString(2, phone);
+            statement.setString(3, city);
+            statement.execute();
+            connection.commit();
+            Platform.runLater(() -> {
+                callback.call(null);
+            });
+        } catch (SQLException e) {
+            rollback();
+            Platform.runLater(() -> {
+                callback.call(e);
+            });
+        }
+    }
+    
+    public void addAgents(String name, String phone, String city, Callback<SQLException> callback) {
+        new Thread(() -> addAgentsInternal(name, phone, city, callback)).start();
+    }
+    
+    private synchronized void removeAgentsInternal(Agent agent,
+            Callback<SQLException> callback) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("delete from agent where id = " + agent.getId());
+            connection.commit();
+            Platform.runLater(() -> {
+                callback.call(null);
+            });
+        } catch (SQLException e) {
+            rollback();
+            Platform.runLater(() -> callback.call(e));
+        }
+    }
+    
+    public void removeAgents(Agent agent, Callback<SQLException> callback) {
+        new Thread(() -> removeAgentsInternal(agent, callback)).start();
+    }
+    
+    private synchronized void changeAgentNameInternal(Agent agent,
+            Callback<SQLException> callback) {
+        String query = "update agent set name = ? where id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, agent.getName());
+            statement.setInt(2, agent.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            rollback();
+            Platform.runLater(() -> callback.call(e));
+        }
+    }
+    
+    public void changeAgentName(Agent agent, Callback<SQLException> callback) {
+        new Thread(() -> changeAgentNameInternal(agent, callback)).start();
+    }
+    
+    private synchronized void changeAgentPhoneInternal(Agent agent,
+            Callback<SQLException> callback) {
+        String query = "update agent set phone = ? where id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, agent.getPhone());
+            statement.setInt(2, agent.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            rollback();
+            Platform.runLater(() -> callback.call(e));
+        }
+    }
+    
+    public void changeAgentPhone(Agent agent, Callback<SQLException> callback) {
+        new Thread(() -> changeAgentNameInternal(agent, callback)).start();
+    }
+    
+    private synchronized void changeAgentCityInternal(Agent agent,
+            Callback<SQLException> callback) {
+        String query = "update agent set city = ? where id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, agent.getCity());
+            statement.setInt(2, agent.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            rollback();
+            Platform.runLater(() -> callback.call(e));
+        }
+    }
+    
+    public void changeAgentCity(Agent agent, Callback<SQLException> callback) {
+        new Thread(() -> changeAgentNameInternal(agent, callback)).start();
+    }
 }

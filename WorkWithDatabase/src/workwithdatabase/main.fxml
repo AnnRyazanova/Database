@@ -12,6 +12,7 @@
         <Button mnemonicParsing="false" onAction="#onMakeTransfer" text="Оформить транспортировку" />
         <Button mnemonicParsing="false" onAction="#onMakeSupply" text="Оформить поставку" />
         <Button mnemonicParsing="false" onAction="#onGoodsTable" text="Справочник товаров" />
+        <Button mnemonicParsing="false" onAction="#onAgentsTable" text="Справочник поставщиков" />
     </children>
     <padding>
         <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />

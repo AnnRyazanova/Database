@@ -131,7 +131,7 @@ public class GoodsTableController extends Pane implements Initializable {
     private void onEditMeasure(CellEditEvent<Goods, String> event) {
         Goods changedGoods = event.getRowValue();
         changedGoods.setMeasure(event.getNewValue());
-        connection.changeGoodsNomenclature(changedGoods, (error) -> {
+        connection.changeGoodsMeasure(changedGoods, (error) -> {
             if (null != error) {
                 error.printStackTrace(System.out);
                 new Alert(AlertType.ERROR, "Не удалось внести изменения", ButtonType.OK)

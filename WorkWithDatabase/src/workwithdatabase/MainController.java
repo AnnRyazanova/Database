@@ -50,4 +50,15 @@ public class MainController {
         window.setScene(new Scene(GoodsTableController.create()));
         window.showAndWait();
     }
+    
+    @FXML
+    private void onAgentsTable() throws IOException {
+        Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.initOwner(stage);
+        window.setTitle("Справочник поставщиков");
+        window.setResizable(false);
+        window.setScene(new Scene(AgentsTableController.create()));
+        window.showAndWait();
+    }
 }
