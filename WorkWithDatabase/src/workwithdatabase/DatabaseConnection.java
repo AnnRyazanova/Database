@@ -175,7 +175,7 @@ public class DatabaseConnection {
                     statement.execute(
                             "execute procedure add_goods_to_transfer("
                             + transferId + ", "
-                            + selectedGoods.getGoods().getMeasure() + ", "
+                            + selectedGoods.getGoods().getId() + ", "
                             + selectedGoods.getCount() + ")");
                 }
             }
