@@ -131,6 +131,10 @@ public class SupplyController extends GridPane implements Initializable {
         try {
             countValue = Integer.parseInt(count.getText());
             count.setText("");
+            if (countValue <= 0){
+                new Alert(AlertType.WARNING, "Количество должно быть положительным числом", ButtonType.OK).show();
+                return;
+            }
         } catch (NumberFormatException e) {
             new Alert(AlertType.WARNING, "Не могу распознать количество", ButtonType.OK).show();
             return;
